@@ -1,0 +1,98 @@
+
+.product__wrapper{
+   flex:1 0 250px;
+   /* min-width:25%;*/
+   max-width:30%; 
+} 
+
+@media screen and (max-width:1024px){
+  .product__wrapper{
+    flex:1 0 200px;
+    /* min-width:25%;*/
+    max-width:40%; 
+ } 
+}
+
+@media screen and (max-width:800px){
+  .product__wrapper{
+    flex:1 0 300px;
+    /* min-width:25%;*/
+    max-width:50%; 
+ } 
+}
+
+@media screen and (max-width:450px){
+  .product__wrapper{
+    flex:1 0 200px;
+    /* min-width:25%;*/
+    max-width:100%; 
+ } 
+}
+
+.product__container{
+  text-align: center;
+  margin: 1rem;
+  border:1px solid rgb(228, 228, 228);
+  border-radius: 4px;;
+  transition : 0.1s all ease;
+}
+
+.product__container:hover{
+  margin:0.7rem;
+}
+
+
+.product__image img{
+  width:100%;
+  border-radius:4px  4px 0px 0px;;
+  cursor:pointer;
+}
+
+.product__desc{
+   margin:0.3rem;
+   font-weight: 500;
+}
+
+.product__date{
+  color:grey;
+  font-style: italic;
+  font-weight: lighter;
+  font-size:0.9rem;
+}
+
+.product__buttons{
+  padding:0.5rem 1rem;
+}
+
+.product__buttons p{
+   display: inline;
+   margin:0;
+   padding:0.1rem;
+}
+
+.link{
+  color:white;
+  text-decoration: none;
+}
+
+.link:hover{
+  color:white;
+  text-decoration: none;
+}
+
+.btn{
+ background-color: purple;
+ color: white;
+}
+
+.product__view{
+ color: #fff;
+ background-color: #2E4C80;
+ background-color: pink;
+ border-color: #2E4C80;
+ border-color: cutom-cor;
+}
+
+.product__add{
+ background-color: blueviolet;
+}

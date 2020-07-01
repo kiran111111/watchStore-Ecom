@@ -1,0 +1,13 @@
+
+.link{
+ color:rgb(185, 185, 185);
+ padding: 0.5rem;
+ padding-top: 0.5rem;;
+ text-decoration: none;
+}
+
+
+.link:hover{
+ color:white;
+ text-decoration: none;
+}

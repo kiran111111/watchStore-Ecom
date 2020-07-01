@@ -1,0 +1,96 @@
+
+.container{
+ margin:0 2rem;
+}
+
+.addProduct{
+ margin:1rem 0;
+}
+
+.addProduct h4{
+ display: inline;
+ margin-right: 1rem;;
+}
+
+.addLink  {
+ color:white;
+}
+
+.addLink:hover{
+ color:white;
+ text-decoration: none;
+}
+
+.actionLinks{
+ display: inline;
+ margin:0 0.2rem;
+}
+
+
+/* Styles for the Add Component------------------------------------------- */
+
+.action__container{
+  text-align: center;
+}
+
+.title{
+ text-transform: uppercase;
+}
+
+/* Form labels and input fields  */
+.form{
+ width:50%;
+ margin:0 auto;
+ /* border:1px solid black; */
+}
+
+.label{
+ display: block;
+ text-align: left;
+ margin:0 ;
+ padding-top:1rem;
+ padding-bottom: 0.3rem;;
+}
+
+.inputField{
+ border-radius: 3px;
+ padding:0.6rem;
+ width:100%;
+ border:1px solid rgb(172, 172, 172);
+ outline: none;
+}
+
+
+.button{
+ border-radius: 3px ;
+ padding:0.7rem 1rem;
+ margin:1rem 0rem;
+ background-color:#6f0fec;
+ color:white;
+ outline: none;
+ border:1px solid #6a0de4;
+ cursor:pointer;
+ transition: 0.2s all ease;
+}
+
+.button:hover{
+ background-color: #47089b;
+ border:1px solid #41068f;
+}
+
+
+/* table styles */
+
+.table__body{
+  overflow:scroll
+}
+
+
+.cell__breakword{
+  /* word-wrap: break-word; */
+  width:300px;
+  max-height:50px;
+  word-wrap: break-word;
+  overflow-y: scroll;
+  text-overflow: ellipsis;
+}

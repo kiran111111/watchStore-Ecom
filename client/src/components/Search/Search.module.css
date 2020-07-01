@@ -1,0 +1,39 @@
+.container{
+ /* border: 1px solid black; */
+ width:80%;
+ margin:0 auto;
+}
+
+.search__input{
+ border-radius: 3px;
+ padding:0.6rem;
+ width:100%;
+ border:1px solid rgb(172, 172, 172);
+ outline: none;
+ margin-bottom: 2rem;
+}
+
+.results__container{
+ border-radius: 3px;
+ padding:0.6rem;
+ width:100%;
+ border:1px solid rgb(172, 172, 172);
+ outline: none;
+ text-align: center;
+}
+
+/* styles.for the results container */
+.product__list{
+ display: flex;
+ flex-wrap : wrap;
+ text-align:center;
+ justify-content: space-around;
+}
+
+.product__wrapper{
+ flex: 1;
+}
+
+.products__numbers{
+ font-weight: bold;
+}

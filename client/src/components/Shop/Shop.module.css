@@ -1,0 +1,23 @@
+
+.shop__container{
+ margin:3rem;
+ display: flex;
+ flex-wrap: wrap;
+}
+
+@media screen and (max-width:800px){
+ .shop__container{
+  margin:2rem;
+  display: flex;
+  flex-wrap: wrap;
+ }
+}
+
+
+@media screen and (max-width:450px){
+ .shop__container{
+  margin:1rem;
+  display: flex;
+  flex-wrap: wrap;
+ }
+}
