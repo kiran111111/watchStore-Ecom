@@ -16,7 +16,7 @@ export  const DELETE_ITEM = 'DELETE_ITEM';
 export const LOGIN_USER = 'LOGIN_USER';
 export const REGISTER_USER = 'REGISTER_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
-export const SET_USER = 'SET_USER';
+export const SET_USER_BEGIN = 'SET_USER_BEGIN';
 export const SET_USER_SUCCESS = 'SET_USER_SUCCESS'
 export const SET_USER_FAILURE = 'SET_USER_FAILURE'
 
@@ -99,7 +99,7 @@ export const fetchCurrentUser = (token) => {
     })
     .then(res => {
        console.log(res)
-       dispatch(setUser(res.data)) 
+       dispatch(setUserSuccess(res.data)) 
        return res.data;
      })
    .catch(error =>{ 
@@ -235,8 +235,8 @@ export const logoutUser = () => ({
   type: 'LOGOUT_USER'
 })
 
-export const setUser = (userObj) =>({
-  type : 'SET_USER',
+export const setUserSuccess = (userObj) =>({
+  type : 'SET_USER_SUCCESS',
   payload : userObj
 })
 

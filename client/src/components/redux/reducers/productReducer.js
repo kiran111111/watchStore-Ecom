@@ -7,7 +7,7 @@ import {
   REGISTER_USER,
   LOGIN_USER,
   LOGOUT_USER,
-  SET_USER,
+  SET_USER_SUCCESS,
   GET_CARTCONTENT
 } from '../actions/productActions';
 
@@ -79,7 +79,7 @@ export  function authReducer(state = userState, action) {
       return {...state, currentUser: action.payload}
     case LOGOUT_USER:
       return {...state, currentUser: {} ,cartItemsContent : []}  
-    case SET_USER:
+    case SET_USER_SUCCESS:
      return {...state , currentUser : action.payload} 
     case ADD_TO_CART:
      return {...state ,currentUser : action.payload }  

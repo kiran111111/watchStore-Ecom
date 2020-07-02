@@ -4,7 +4,7 @@ import {Button} from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import styles from "./Cart.module.css";
 // redux library
-import {addQuantity,subtractQuantity,fetchCurrentUser,fetchProducts,deleteFromCart,fetchCartItems} from "../redux/actions/productActions";
+import {fetchCurrentUser,fetchProducts,deleteFromCart,fetchCartItems} from "../redux/actions/productActions";
 import {useDispatch,connect} from "react-redux";
 import axios from 'axios';
 
@@ -133,8 +133,6 @@ const mapStateToProps = (state)=>{
 
 const mapDispatchToProps = (dispatch)=>{
   return{
-    addQuantity: (id)=>{dispatch(addQuantity(id))},
-    subtractQuantity: (id)=>{dispatch(subtractQuantity(id))},
     deleteFromCart : (id)=>{dispatch(deleteFromCart(id))} 
   }
 }
