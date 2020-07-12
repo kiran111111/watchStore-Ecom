@@ -23,11 +23,9 @@ app.use(bodyParser.json())
 
 app.use('/uploads', express.static('uploads'));
 
-// app.use(jwt({ secret: jwtSecret }));
 // cors module
 const cors = require("cors")
 app.use(cors())
-
 
 
 // Route to expres router

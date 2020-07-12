@@ -3,40 +3,55 @@ const Product = require("../models/products/products");
 const path  = require("path");
 // modu
 let multer = require('multer')
-let uuidv4 = require('uuid')
+let uuid = require('uuid')
 const jimp = require("jimp");
 
 exports.upload = multer({dest:'../public/'}).single('image');
 
 const DIR = "./uploads/";
 
-// creating multer disk storage-----------
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-      cb(null, DIR);
-  },
-  filename: (req, file, cb) => {
-      const fileName = file.originalname.toLowerCase().split('\\').splice(-1,1);
-      cb(null, 3456 + '-' + fileName)
+
+const multerOptions = {
+  storage : multer.memoryStorage(),
+
+  fileFilter(req,file,next){
+    const isPhoto = file.mimetype.startsWith('image/');
+    if(isPhoto){
+      next(null,true)
+    }else{
+      const msg = "not";
+      next({message:'This filetype is not allowed'},false);
+    }
   }
-});
+}
+
+// Middleware for uploading photos
+exports.uploads = multer(multerOptions).single('file');
 
 
-// adding filters to the upload request
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
-      cb(null, true);
-  } else {
-      cb("Type file is not access", false);
+// Middleware for resizing the photos
+exports.resize = async (req,res,next) =>{
+  // check if there is no new file
+  if(!req.file){
+    next();// skip to next middleware
+    return;
   }
-};
+  const url = req.protocol + '://' + req.get('host');
+  const extension = req.file.mimetype.split("/")[1];
+  req.body.file = `${uuid.v4()}.${extension}`;
+  // now we resize
+  const photo = await jimp.read(req.file.buffer);
+  await photo.resize(1000,jimp.AUTO);
+  await photo.write(`./uploads/${req.body.file}`);
 
-exports.upload = multer({
-  storage,
-  fileFilter,
-  limits: 1024 * 1024 * 5
-}).single("file");
+  console.log("resize :"+photo.file)
+  // once we have written in out file system
+  next();
+}
 
+
+
+ 
 // Query to get list of stores
 exports.getProducts = async (req,res) =>{
  try{
@@ -61,22 +76,11 @@ exports.createProduct = async (req,res)=>{
 
   const url = req.protocol + '://' + req.get('host')
 
-  // let product = new Product(req.body);
-  let product = new Product({
-    name: req.body.name,
-    price:req.body.price,
-    // image:url + '/public/' + req.file.filename,
-    file:url + '/uploads/' + req.file.filename,
-    image:url + '/uploads/' + req.file.filename,
-    description:req.body.description
-  });
+  let product = new Product(req.body);
 
-  console.log(product)
-  
   try{
     await product.save(err=>{
       if(err){
-        console.log(err)
         res.send("error")
       }else{
         res.send("product created")
@@ -84,7 +88,6 @@ exports.createProduct = async (req,res)=>{
     });
   }catch(err){
     if(err){
-      console.log(err)
       res.send("error")
     }
   }
@@ -96,22 +99,29 @@ exports.createProduct = async (req,res)=>{
 exports.editProduct = async (req,res) =>{
  //  1. Get the store with the given Id
 
- const url = req.protocol + '://' + req.get('host')
+ const url = req.protocol + '://' + req.get('host');
 
-
- console.log("edit details"+req.body.name)
- console.log("edit details"+req.params.id)
- console.log(req.body)
- console.log(req.file)
+ const product =  await Product.find({_id: req.params.id});
+  if(req.file == undefined){
+    var file = product[0].file; 
+  }
+  else{
+    var file = req.body.file
+  }
+   console.log("existing file :"+file)
  try{
   await Product.findOneAndUpdate({_id: req.params.id},
-     req.body
+   {
+    name: req.body.name,
+    price:req.body.price,
+    file: file,
+    image:req.body.image,
+    description:req.body.description
+   }
     ,(err,docs)=>{
     if(err){
-      console.log(err)
       res.send("error")
     }else{
-      console.log(docs)
      res.send(docs)
     }
   })
@@ -133,7 +143,6 @@ exports.deleteProduct = async (req,res,next)=>{
       res.send("error")
      }
      else{
-      console.log("deleted product")
       res.send(docs)
      }
    })
