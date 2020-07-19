@@ -1,0 +1,13 @@
+
+
+.errorBox{
+ margin:1rem;
+ text-align:center;
+}
+
+.error{
+  background-color: rgb(218, 129, 129);
+  border:1px solid red;
+  padding:0.5rem;
+  border-radius: 4px;
+}

@@ -1,6 +1,6 @@
 import React,{useEffect} from 'react'
 import NavBar from "../../Navbar/Navbar";
-import Dashboard from "./Table/Table";
+// import Dashboard from "./Table/Table";
 import { Table,Button} from 'react-bootstrap'
 import styles from "./Admin.module.css";
 import { Link ,Redirect} from "react-router-dom";
@@ -26,7 +26,6 @@ function Admin(props) {
    await Product.deleteProduct(id)
   .then(res=>{
     var index = props.products.findIndex(p=> p._id === id);
-    console.log("index of item to be deleted : "+index)
       if (index > -1) {
        props.products.splice(index, 1);
        dispatch(fetchProducts())
@@ -99,14 +98,6 @@ function Admin(props) {
                   variant="danger"
                   onClick={e => deleteProduct(e, p._id)}
                   >Delete
-                    {/* <Link className={styles.addLink} to={{
-                      pathname:"/admin/delete/"+_id,
-                      deleteProps:{
-                        id : _id
-                      }
-                      }}> 
-                      Delete
-                    </Link> */}
                   </Button>
                 </p>
               </td>
@@ -150,25 +141,3 @@ export default connect(mapStateToProps)(Admin);
 
 
 
-
-// method for getting all the products when the component loads -------
-  // const fetchTodoAndSetTodos = async () => {
-  //   await Product.getAllProducts()
-  //   .then(res =>{
-  //     console.log(res)
-  //     const products = res.data;
-  //     setProducts(products)
-  //     console.log(products)
-  //    }).catch(err=>{
-  //     console.log(err.response)
-      // const errorMessage = err.response.data.message;
-      // setErrorMessage(errorMessage)
-      // console.log(err.response.data.message)
-      // console.log(error)
-  //    })
-  //  }
-
-
-  //  useEffect(() => {
-  //   fetchTodoAndSetTodos()
-  // },[])

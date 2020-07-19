@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json())
 
 
-app.use('/uploads', express.static('uploads'));
+// app.use('/api/uploads', express.static('uploads'));
 
 // ADD THIS LINE
 app.use(express.static('client/build'));
@@ -32,9 +32,17 @@ app.use(cors())
 
 
 // Route to expres router
-app.use('/',router);
+app.use('/api',router);
 
+// serve static assets if we are in production
+if(process.env.NODE_ENV !== 'production'){
+ // set a static folder
+ app.use(express.static('client/build'))
 
+ app.get("*",(req,res)=>{
+   res.sendFile(path.resolve(__dirname,"client","build","index.html"))
+ })
+}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

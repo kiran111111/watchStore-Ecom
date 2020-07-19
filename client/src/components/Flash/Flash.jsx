@@ -2,6 +2,9 @@ import React,{useEffect,useState} from 'react';
 import styles from "./Flash.module.css";
 import Bus from "../../Utils/Bus"
 
+
+// IT IS A COMPONENT THAT GIVES FLASH MESSAGES ----
+
 export default function Flash() {
 
   let [visibility,setVisibility] = useState(false);

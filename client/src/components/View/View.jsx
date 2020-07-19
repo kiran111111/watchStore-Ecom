@@ -1,14 +1,14 @@
-import React,{useEffect,useState} from 'react';
-import {Button} from "react-bootstrap";
+import React,{useState} from 'react';
+import {Button,Spinner} from "react-bootstrap";
+import { Link } from 'react-router-dom';
 import NavBar from "../Navbar/Navbar";
 import styles from "./View.module.css";
-import {FlashMessage} from 'react-flash-message'
-// redux librar
+
 import {addItemToCart,fetchCurrentUser} from "../redux/actions/productActions";
 import {connect,useDispatch} from "react-redux";
 
 
-
+const url = `${process.env.REACT_APP_BACKEND_URI}/uploads/`;
 
 function View(props) {
 
@@ -16,14 +16,9 @@ function View(props) {
   const viewedId = props.match.params.id; 
   const product = products.find(p => p._id == viewedId);
 
-  // const {_id,name,description,price,image} = product;
   const dispatch = useDispatch();
 
-  console.log(props)
-
-
   const [qty, setQty] = useState('')
-
 
    //onChange event handler for the inputs ------------------------------------------------
   function handleChange(evt) {
@@ -31,47 +26,65 @@ function View(props) {
     setQty(value)
   }
 
-  console.log(qty)
-
   const handleAddToCart = async (id,qty)=>{ 
-    console.log("action triggered")
-    console.log("product id : "+id)
-    console.log("qty :"+ qty)
     props.addItemToCart(id,qty)
     await dispatch(fetchCurrentUser())
-    console.log("fetched")
     window.flash('Product has been successfully added to Cart', 'success')
   }
 
   
     return (
       <div className={styles.view__wrapper}>
-        { props.loading ? "" :
+       { props.loading ? "" :
         <>
-         <NavBar />
-        
+        <NavBar />
          <div>
          </div>
          <div className={styles.view__container}>
           <div className={styles.view__content}>
             <div className={styles.view__image}>
-              <img src={(`${product.file}`)} alt="watch"/>
+              <img src={(`${url}${product.file}`)} alt="watch"/>
             </div>
             <div className={styles.view__details}>
               <p>{product.name} </p>
               <p>${product.price} </p>
               <div>
                  <p><span>Quantity : </span> <input onChange={(e) => handleChange(e)} type="number" min="1" max="20"></input></p>
-                 <Button
+
+               {props.addLoading ? 
+                  <div><Spinner animation="border" variant="info" /> </div>
+                :
+                
+               <>
+               <div>
+                {props.user.name ?
+                  <Button
                    className={styles.button}
                    type="button" 
                    variant="danger"
                    onClick={()=>{
                      handleAddToCart(product._id, qty)
                     }}
-                  >
+                   >
                    Add
-                 </Button>
+                  </Button>
+                 :
+                  <Button
+                    className={styles.button}
+                    type="button" 
+                    variant="danger"
+                   >
+                    <Link 
+                      className={styles.link} 
+                      to={{pathname: `/login`}} 
+                    >Login To add Product
+                    </Link>
+                  </Button>
+                } 
+                </div>
+              </>
+              }
+
                </div>
             </div>
           </div>
@@ -85,9 +98,7 @@ function View(props) {
         }
       </div>
      ) 
-
- 
-}
+   }
 
 
 
@@ -95,7 +106,9 @@ function View(props) {
 const mapStateToProps = state => ({
   products: state.products.items,
   loading: state.products.loading,
-  error: state.products.error
+  error: state.products.error,
+  user : state.auth.currentUser,
+  addLoading : state.auth.loading
 });
 
 const mapDispatchToProps = dispatch => {

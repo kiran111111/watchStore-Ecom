@@ -1,29 +1,48 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import NavBar from "../../../Navbar/Navbar";
 import styles from "../Admin.module.css";
 import Products from "../../../../Products";
 import {Redirect} from "react-router-dom";
+import {Spinner} from "react-bootstrap";
 import Admin from "../Admin";
-import axios from "axios";
+import {mainHttp as axios} from "../../../../Axios/axios"
 
-import {connect} from "react-redux";
+
+
+// TODO : THERE IS A BIG BUG IN HERE
+// TODO : WHEN THE EDIT PAGE RELOADS IT MESSES UP EVERYTHING:
+// ! SOLVE THIS ISSUE WHEN YOU GET TIME -------
+
+
+import {editInventoryBegin,
+       editInventorySuccess,
+       fetchProducts,
+         } 
+       from "../../../redux/actions/productActions";
+import {useDispatch,connect} from "react-redux";
 
 
 function Edit(props) {
 
-  const {products} = props; 
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(fetchProducts())
+  },[])
+
   const editProps = props.match.params;
 
-  const toEditProduct = products.find(p => p._id == editProps.id ? p : '')
-
-  const [editProduct,setEditProduct] = useState( editProps && toEditProduct);
+  const toEditProduct = props.productToBeEdited;
+  console.log(toEditProduct)
+  const [editProduct,setEditProduct] = useState(toEditProduct);
   const [state,setState]  = useState({edited : false});
 
-  const {_id,name,price,image,description} = editProduct;
-  const [file,setFile] = useState(editProduct.image)
-
-  console.log(file)
   console.log(editProduct)
+  // const {_id,name,price,image,description} = editProduct;
+  const [file,setFile] = useState('')
+  console.log(file)
+ 
+  
 
 // Apply an event handler to the input fields
   function handleChange(evt) {
@@ -50,16 +69,19 @@ function Edit(props) {
     formData.append("price", editProduct.price);
     formData.append("description", editProduct.description);
     formData.append("file", file);
-    // formData.append("image", file.name);
+    formData.append("image", file.name);
 
-    axios
-    .post(`http://localhost:5000/edit/${id}`, formData ,{
+
+    dispatch(editInventoryBegin());
+    await axios
+    .post(`/edit/`, formData ,{
       headers: {
         'Content-Type': 'multipart/form-data'
       },
     })
       .then(res => {
         setState({edited : true})
+        dispatch(editInventorySuccess());
       })
       .catch(err => console.error(err));
   }
@@ -81,9 +103,15 @@ function Edit(props) {
    <div className={styles.action__container}>
     {(state.edited  === true) ? redirectToAdmin() : ""}
     <h3 className={styles.title}>Edit your Product</h3>
+   
+   
+
+    {!editProduct ?  <div><Spinner animation="border" variant="info" /> </div> 
+      :
+
      <form  
      onSubmit={(e) => {
-      handleSubmitProduct(_id,e
+      handleSubmitProduct(editProduct._id,e
       )}}
      className={styles.form}  >
 
@@ -92,7 +120,7 @@ function Edit(props) {
          className={styles.inputField}
          name='name'
          placeholder='Name.'
-         value={name}
+         value={editProduct.name}
          onChange={handleChange}
          /><br/>
 
@@ -102,7 +130,7 @@ function Edit(props) {
          type="Number"
          name='price'
          placeholder='Price..'
-         value={price}
+         value={editProduct.price}
          onChange={handleChange}
        />
        <br/> 
@@ -123,7 +151,7 @@ function Edit(props) {
          type='text'
          name='description'
          placeholder='Product details..'
-         value={description}
+         value={editProduct.description}
          onChange={handleChange}
          /><br/>  
      
@@ -132,7 +160,9 @@ function Edit(props) {
           
         />
     
-     </form>
+      </form>
+     }
+
     </div>
 
   </div>
@@ -140,13 +170,24 @@ function Edit(props) {
 }
 
 
-const mapStateToProps = state => ({
-  products: state.products.items,
-  loading: state.products.loading,
-  error: state.products.error
+
+
+
+const mapStateToProps = (state,props) => ({
+      productToBeEdited : state.products.items.find(p => p._id == props.match.params.id ? p : ''),
+      loading : state.products.loading,
+      error : state.products.error,
+      editLoading : state.inventory.loading
 });
 
-export default connect(mapStateToProps)(Edit);
+
+const mapDispatchToProps = dispatch => {
+  return{
+    fetchProducts : ()=> {dispatch(fetchProducts)}
+   } 
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(Edit);
 
 
 

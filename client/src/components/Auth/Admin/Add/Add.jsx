@@ -3,9 +3,17 @@ import NavBar from "../../../Navbar/Navbar";
 import styles from "../Admin.module.css";
 import Products from "../../../../Products";
 import {Redirect} from "react-router-dom";
+import {Spinner} from "react-bootstrap";
 import Admin from "../Admin";
 import Shop from "../../../Shop/Shop";
-import axios from "axios";
+import {mainHttp as axios} from "../../../../Axios/axios";
+
+
+
+import {addInventoryToStore,addInventorySuccess,addInventoryBegin} from "../../../redux/actions/productActions";
+import {useDispatch,connect} from "react-redux";
+
+
 
 const initialState = {
   name:'gfg',
@@ -15,11 +23,14 @@ const initialState = {
 }
 
 
-export default function Add() {
+function Add(props) {
+
+  const dispatch = useDispatch();
 
   const [product,setProduct] = useState('');
   const [file,setFile] = useState('')
   const [state,setState]  = useState({added : false});
+
 
 // method for creating a new product
 // I will have to put onchange event handler on all the input field
@@ -30,7 +41,6 @@ export default function Add() {
     // handle input change event
     function handleChange(evt) {
       const value = evt.target.value;
-      console.log(evt.target)
     
       setProduct({...product,
         [evt.target.name]: value
@@ -40,7 +50,6 @@ export default function Add() {
 
     // handle file change
     function handleFileChange(evt){
-      console.log(evt.target.files[0].name)
       setFile(evt.target.files[0])
     }
 
@@ -50,23 +59,28 @@ export default function Add() {
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", product.name);
-    formData.append("price", product.price);
-    formData.append("description", product.description);
-    formData.append("file", file);
-    formData.append("image", file.name);
+    await formData.append("name", product.name);
+    await formData.append("price", product.price);
+    await formData.append("description", product.description);
+    await formData.append("file", file);
+    await formData.append("image", file.name);
 
-    axios
-    .post("http://localhost:5000/add/", formData,{
+   
+
+    
+    dispatch(addInventoryBegin()) 
+    await axios
+    .post(`/add/`, formData,{
       headers: {
         'Content-Type': 'multipart/form-data'
       },
     })
       .then(res => {
-        console.log(res.data)
-        setState({added : true}) ; 
+        setState({added : true}) ;
+        dispatch(addInventorySuccess()) 
+        window.flash('Product added', 'success') 
       })
-      .catch(err => console.error(err));
+
   }
 
 
@@ -83,6 +97,10 @@ export default function Add() {
    <div className={styles.action__container}>
    {(state.added  === true) ? redirectToShop() : ""}
     <h3 className={styles.title}>Add a New  Product</h3>
+
+    {props.loading ? <div><Spinner animation="border" variant="info" /> </div> 
+     :
+
      <form
       // action="/add"
        method="post" enctype="multipart/form-data" onSubmit={handleSubmitProduct} className={styles.form} >
@@ -114,7 +132,7 @@ export default function Add() {
          name="image"
          accept="image/*"
          placeholder='Upload your image here..'
-         value={product.image && product.image}
+        //  value={product.image && product.image}
          onChange={(e) => handleFileChange(e)}
          /><br/>
 
@@ -131,11 +149,20 @@ export default function Add() {
        <input className={styles.button} type='submit' />
     
      </form>
+     }
+
     </div>
 
   </div>
  )
 }
+
+
+const mapStateToProps = state => ({
+  loading: state.inventory.loading
+});
+
+export default connect(mapStateToProps,null)(Add);
 
 
 // todo:--------*****************************

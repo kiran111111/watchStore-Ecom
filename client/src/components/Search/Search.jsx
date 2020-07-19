@@ -3,13 +3,11 @@ import styles from "./Search.module.css"
 import Navbar from "../Navbar/Navbar";
 import Product from "../Product/Product"
 
-import { connect ,useDispatch} from 'react-redux';
+import { connect} from 'react-redux';
 
 function Search(props) {
 
  const [state,setState] = useState({suggestions:[],text:''})
-
- console.log(props)
 
  const onTextChange=(e) => {
   let suggestions = [];
@@ -18,19 +16,15 @@ function Search(props) {
     let patt = new RegExp(`^${value}`,'i')
     suggestions = props.items.filter(v => patt.test(v.name));
   }
-
    setState({
      text:e.target.value,
      suggestions : suggestions
    })
  }
 
- console.log(state)
-
 
  // render the suggestions products .................................
  const renderSuggestions = () => {
-  //  let suggestions = this.state;
    if(state.suggestions.length == 0){
      return null;
    }
@@ -56,7 +50,7 @@ function Search(props) {
  return (
   <div>
     <Navbar />
-    <div class={styles.container}>
+    <div className={styles.container}>
      <input
       type="text"
       name="search"
@@ -87,10 +81,7 @@ const mapStateToProps = (state)=>{
  }
 }
 
-// const mapDispatchToProps = dispatch => ({
-//  logoutUser: () => dispatch(logoutUser())
-// })
 
 export default connect(mapStateToProps,
- // mapDispatchToProps
+ null
  )(Search)

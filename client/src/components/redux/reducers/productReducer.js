@@ -2,13 +2,34 @@ import {
   FETCH_PRODUCTS_BEGIN,
   FETCH_PRODUCTS_SUCCESS,
   FETCH_PRODUCTS_FAILURE,
+
+  ADD_TO_CART_BEGIN,
   ADD_TO_CART,
+  DELETING_BEGIN,
   DELETE_ITEM,
+
+  REGISTER_BEGIN,
   REGISTER_USER,
+  REGISTER_USER_FAILURE,
+
+  LOGIN_BEGIN,
   LOGIN_USER,
+  LOGIN_USER_FAILURE,
   LOGOUT_USER,
+
+  SET_USER_BEGIN,
   SET_USER_SUCCESS,
-  GET_CARTCONTENT
+  SET_USER_FAILURE,
+
+  GET_CARTCONTENT,
+  GET_CARTCONTENT_BEGIN,
+  GET_CARTCONTENT_FAILURE,
+
+  ADD_INVENTORY_BEGIN,
+  ADD_INVENTORY_SUCCESS,
+
+  EDIT_INVENTORY_BEGIN,
+  EDIT_INVENTORY_SUCCESS
 } from '../actions/productActions';
 
 const initialState = {
@@ -70,35 +91,85 @@ const userState = {
   quantity: 0,
   total :0,
   loading : false,
-  error : null
+  error : null,
+  status : '',
+  cartItemsLoading :false,
+  deleting : false,
+  itemsError : ''
 }
+
 
 export  function authReducer(state = userState, action) {
   switch (action.type) {
+    case LOGIN_BEGIN:
+      return {...state, currentUser: {} , error : '',status :'',loading:true}
     case LOGIN_USER:
-      return {...state, currentUser: action.payload}
+      return {...state, currentUser: action.payload.userObj , status : action.payload.status ,error : '' ,loading:false}
+    case LOGIN_USER_FAILURE:
+      return {...state, currentUser: {} , error : action.payload , loading:false}  
     case LOGOUT_USER:
-      return {...state, currentUser: {} ,cartItemsContent : []}  
+      return {...state, currentUser: {} ,cartItemsContent : [] , status :'' , cartItemsLoading : false}
+
+    case REGISTER_BEGIN:
+      return {...state, currentUser: {} , error : '',status : '',loading:true} 
+    case REGISTER_USER:
+      return {...state, currentUser: {} ,status : action.payload, error : '',loading:false}      
+    case REGISTER_USER_FAILURE :
+      return {...state , currentUser :{},cartItemsContent : [] , error : action.payload,loading:false} 
+
+    case SET_USER_BEGIN:
+      return {...state , currentUser : {} , error : '' , loading : true}   
     case SET_USER_SUCCESS:
-     return {...state , currentUser : action.payload} 
+     return {...state , currentUser : action.payload , error : '' ,loading: false} 
+    case SET_USER_FAILURE:
+     return {...state , error : action.payload , currentUser : {} ,cartItemsContent : [] , loading:false} 
+
+    case ADD_TO_CART_BEGIN:
+     return {...state ,currentUser : { }  } 
     case ADD_TO_CART:
-     return {...state ,currentUser : action.payload }  
+     return {...state ,currentUser : action.payload  }  
+    case  GET_CARTCONTENT_BEGIN :
+     return {...state , cartItemsContent : {}, cartItemsLoading:true ,itemsError : ''}  
     case  GET_CARTCONTENT :
-     return {...state , cartItemsContent : action.payload }  
+     return {...state , cartItemsContent : action.payload , cartItemsLoading : false ,itemsError : ''} 
+     case  GET_CARTCONTENT_FAILURE :
+     return {...state , cartItemsContent : {} , cartItemsLoading : false , itemsError : action.payload}  
+
+    case DELETING_BEGIN :
+      return {...state, deleting : true}  
     case DELETE_ITEM  :
 
-     console.log(action.id)
-
      let itemToRemove = state.cartItemsContent.find(item=> action.id == item.product._id)
-     console.log(itemToRemove);
-     
-     let new_items = state.cartItemsContent.filter(item=> action.id !== item.product._id)
-     console.log(new_items)
 
-     return {...state , cartItemsContent : new_items }    
+     let new_items = state.cartItemsContent.filter(item=> action.id !== item.product._id)
+
+     return {...state , cartItemsContent : new_items ,deleting : false }    
     default :
       return state
   }
 }
 
 
+
+// note making  async action for the delete tooo
+// 11/7 done
+
+
+const inventoryState = {
+   loading : false
+}
+
+export  function inventoryReducer(state = inventoryState, action) {
+  switch (action.type) {
+    case ADD_INVENTORY_BEGIN:
+      return {...state,loading : true}
+    case ADD_INVENTORY_SUCCESS:
+      return {...state,loading : false}
+    case EDIT_INVENTORY_BEGIN:
+      return {...state,loading : true}
+    case EDIT_INVENTORY_SUCCESS:
+      return {...state,loading : false}  
+    default :
+      return state
+  }
+}

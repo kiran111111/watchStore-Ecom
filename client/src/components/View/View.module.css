@@ -43,6 +43,21 @@
  margin-right:1rem;
 }
 
+
+
+
+/* Button styles */
 .button{
-  margin-top:-0.5rem;
+  margin-top:0.5rem;
 }
+
+
+.link{
+  color:white;
+  text-decoration: none;
+ }
+ 
+ .link:hover{
+  color:white;
+  text-decoration: none;
+ }

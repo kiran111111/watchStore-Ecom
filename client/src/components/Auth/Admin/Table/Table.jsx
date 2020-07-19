@@ -26,12 +26,6 @@ export default function Dashboard(props) {
   .then(res=>{
     console.log(res)
   })
-  console.log(products);
-
-  //  .then(res=>{
-  //    console.log(res)
-  //    setState({deleted : true})
-  //  })
 }
 
 
@@ -71,14 +65,6 @@ console.log(state.deleted)
             variant="danger"
             onClick={e => deleteProduct(e, _id)}
              >Delete
-              {/* <Link className={styles.addLink} to={{
-                pathname:"/admin/delete/"+_id,
-                deleteProps:{
-                  id : _id
-                 }
-                }}> 
-                Delete
-              </Link> */}
             </Button>
           </p>
          </td>

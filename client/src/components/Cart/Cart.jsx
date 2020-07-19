@@ -1,29 +1,32 @@
 import React,{useEffect,useState} from 'react';
 import NavBar from "../Navbar/Navbar";
+import {Spinner} from "react-bootstrap";
 import {Button} from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import styles from "./Cart.module.css";
 // redux library
 import {fetchCurrentUser,fetchProducts,deleteFromCart,fetchCartItems} from "../redux/actions/productActions";
 import {useDispatch,connect} from "react-redux";
-import axios from 'axios';
+import {mainHttp as axios} from "../../Axios/axios"
+// stripe set up
+import StripeCheckout from 'react-stripe-checkout';
 
 
+const url = `/uploads/`;
 
 function Cart(props) {
 
-  console.log(props)
-
   const dispatch = useDispatch();
 
-  // Fro getting the current user and 
+  // For getting the current user and 
   useEffect(()=>{
-    fetchAll()
+    if(props.currentUser.name){
+     fetchAll()
+    }
   },[])
 
 
   const fetchAll = async() =>{
-     dispatch(fetchProducts())
      dispatch(fetchCurrentUser())
      dispatch(fetchCartItems())
   }
@@ -32,12 +35,7 @@ function Cart(props) {
 
   //get the latest new products when you delete a product
   const handleDeleteFromCart = async (id)=>{ 
-    console.log("action triggered")
-    console.log("product id :"+id)
     props.deleteFromCart(id)
-    dispatch(fetchCurrentUser())
-    dispatch(fetchProducts())
-    console.log("deleted from cart")
     window.flash('Product deleted from Cart', 'success')
   }
 
@@ -49,75 +47,142 @@ function Cart(props) {
     })
   }
   
-
-
-  
-  //to add the quantity
-  const handleAddQuantity = (id)=>{
-      props.addQuantity(id);
+  const handleCheckout = (token,addressess) =>{
+     console.log({token,addressess})
   }
-  //to substruct from the quantity
-  const handleSubtractQuantity = (id)=>{
-      props.subtractQuantity(id);
-  }
-
 
  return (
   <div>
      <NavBar />
         <div className={styles.wrapper}>
 
-          <div className={styles.container}>
+          <div className={styles.viewcart__container}>
 
-           {props.items.length ? 
-             <div>
-              {props.items.map((item,i)=>(
-                <div className={styles.items} key={i}>
-                  <div className={styles.item}>
-                    <img className={styles.image} src={(`${item.product.image}`)} alt="watch" />
-                  </div>
-                  <div className={styles.details}>
-                    <p className={styles.name}>{item.product.name}</p>
-                    <p className={styles.price}>${item.product.price}.00 x {item.quantity}</p>
-                    {/* <p><span>Quantity : </span> <input  type="number" min="1" max="20"></input></p> */}
-                    <Button 
-                      variant="secondary" 
-                      className={styles.delete}
-                      onClick={()=>{handleDeleteFromCart(item.product._id)}}
-                    >x</Button>
-                  </div>
-                </div>
-                ))}
-             </div>
-             : 
-            <div className={styles.empty__container}>
-              <p>No products in your cart. Keep Shopping!</p>
-              <Button variant="primary" className={styles.checkout__btn}>
-                  <Link 
-                    className={styles.link} 
-                    to={{pathname: `/`}} 
-                  >View Products
-                  </Link>
-              </Button>
-            </div>
-            }
+            {/* test code */}
 
-            
+          {/* wait for deleting a item */}
+              {props.deleting ? 
+                 <div><Spinner animation="border" variant="info" /> </div>  
+                 : 
 
-              <div className={styles.checkout__container}>
-               <p>Subtotal : $
-                  {sum}.00
-               </p>
-               <Button 
-                  // disabled="true" 
-                  variant="info" 
-                  className={styles.checkout__btn}>
-                 Checkout
-               </Button>
+                //  wait for loading
+              <> 
+              {props.loading ? 
+                  <div><Spinner animation="border" variant="info" /> </div>
+               : 
+               
+               <>
+              {/* wait for the cart items */}
+               {props.itemsLoading ? 
+                  <div><Spinner animation="border" variant="info" /> </div>
+                :  
+                  <>
+                   {/* 'loaded'  */}
+                   <div>
+                     {props.currentUser.name ? 
+                      <>
+                        {/* "user exists... lets check if you have items  in the cart"  */}
+
+                       <div className={styles.container}>
+                        {props.items.length ? 
+                          // 'items are there see here'
+
+                          <div>
+                          {props.items.map((item,i)=>(
+                            <div className={styles.items} key={i}>
+                              <div className={styles.item}>
+                                <img className={styles.image} src={(`${url}${item.product.file}`)} alt="watch" />
+                              </div>
+                              <div className={styles.details}>
+                                <p className={styles.name}>{item.product.name}</p>
+                                <p className={styles.price}>${item.product.price}.00 x {item.quantity}</p>
+                                {/* <p><span>Quantity : </span> <input  type="number" min="1" max="20"></input></p> */}
+                                <Button 
+                                  variant="secondary" 
+                                  className={styles.delete}
+                                  onClick={()=>{handleDeleteFromCart(item.product._id)}}
+                                >x</Button>
+                              </div>
+                            </div>
+                            ))}
+                         </div>
+
+                          :
+
+                          // 'No items'
+                          <div className={styles.empty__container}>
+                          <p>No products in your cart. Keep Shopping!</p>
+                          <Button variant="primary" className={styles.checkout__btn}>
+                              <Link 
+                                className={styles.link} 
+                                to={{pathname: `/`}} 
+                              >View Products
+                              </Link>
+                          </Button>
+                         </div>
+
+                      }
+
+
+          <div className={styles.checkout__container}>
+             <p>Subtotal : $
+                {sum}.00
+             </p>
+        
+          {/* we will have to convert price into cents for transactions */}
+
+             <StripeCheckout
+                name="Watch Store"
+                amount={sum*100}
+                // image="/static/Logo.ico"
+                currency="USD"
+                shippingAddress={true}
+                billingAddress={true}
+                zipCode={true}
+                token={handleCheckout}
+                trigger="onClick"
+                stripeKey="pk_test_51H1eMzIaYoV5EvnwBmucxBwSgKbSTbM7NblNG7Q4k5sxvUcYZvJHWYHV7Vzj0oixM8hnwhstccdGqUcywOfMz5w500O6DGHZ4s"
+              >
+                <Button
+                  icon="cart"
+                  color="teal"
+                  floated="right"
+                  content="Checkout"
+                  // disabled={isCartEmpty || success}
+                >Checkout</Button>
+               </StripeCheckout>
               </div>
 
-          </div>
+              
+                        
+                </div>
+                  </>
+                     :  
+                  //  " user does not exists.. login to view"
+                    <Button 
+                    variant="primary" 
+                      className={styles.viewcart_btn}
+                    >
+                      <Link 
+                        className={styles.link} 
+                        to={{pathname: `/login`}} 
+                      >Please Login to view your cart
+                      </Link>
+                    </Button>
+                    }
+                  </div>
+                  
+              </>
+              }
 
+             </>  
+             }
+
+            </>
+            }
+
+        {/* test code ends */}
+         </div>
       </div>
   </div>
  )
@@ -127,7 +192,11 @@ function Cart(props) {
 const mapStateToProps = (state)=>{
   return{
     items : state.auth.cartItemsContent,
-    total : state.auth.total
+    total : state.auth.total,
+    currentUser : state.auth.currentUser,
+    loading: state.auth.loading,
+    itemsLoading : state.auth.cartItemsLoading,
+    deleting : state.auth.deleting
   }
 }
 
