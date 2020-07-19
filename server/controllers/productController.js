@@ -6,7 +6,7 @@ let multer = require('multer')
 let uuid = require('uuid')
 const jimp = require("jimp");
 
-exports.upload = multer({dest:'../public/'}).single('image');
+
 
 const DIR = "./uploads/";
 
@@ -59,7 +59,7 @@ exports.getProducts = async (req,res) =>{
      if(err){
        res.send("error")
      }else{
-       res.json(docs)
+      res.send(docs)
      }
    });
  }

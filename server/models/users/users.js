@@ -1,9 +1,9 @@
 // user schema for storing users
-
 const mongo = require("mongo");
 const mongoose = require("mongoose");
 
 const { ObjectId, Number } = mongoose.Schema.Types;
+
 
 const userSchema = mongoose.Schema({
  name:{
@@ -18,9 +18,7 @@ const userSchema = mongoose.Schema({
   required:true
  },
  cartItems:[
-
    {
-
      quantity :{
          type : Number,
          default:1
@@ -30,7 +28,6 @@ const userSchema = mongoose.Schema({
       ref : 'Shop',
      }
    }
-
  ]
 })
 

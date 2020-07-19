@@ -11,7 +11,7 @@ const connectDB = require("./config/db");
 const router = require("./router/routes")
 
 // PORT
-const PORT = 5000;
+const PORT = 5000 || process.env.PORT;
 
 // Connect to the database with the function made--
 connectDB();
@@ -22,6 +22,9 @@ app.use(bodyParser.json())
 
 
 app.use('/uploads', express.static('uploads'));
+
+// ADD THIS LINE
+app.use(express.static('client/build'));
 
 // cors module
 const cors = require("cors")
