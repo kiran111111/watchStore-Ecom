@@ -159,7 +159,7 @@ exports.registerUser =  async (req,res) =>{
   }
    else if(docs){
     res.status(401).send("User already exists!!!");
-    res.redirect("/register");
+    // res.redirect("/register");
    }else{
     try{
      const hashedPassword = await bcrypt.hash(req.body.password,10);

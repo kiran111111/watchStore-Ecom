@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json())
 
 
-// app.use('/api/uploads', express.static('uploads'));
+app.use('/uploads', express.static('uploads'));
 
 // ADD THIS LINE
 app.use(express.static('client/build'));
