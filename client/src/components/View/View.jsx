@@ -8,7 +8,7 @@ import {addItemToCart,fetchCurrentUser} from "../redux/actions/productActions";
 import {connect,useDispatch} from "react-redux";
 
 
-const url = `${process.env.REACT_APP_BACKEND_URI}/uploads/`;
+const url = `/uploads/`;
 
 function View(props) {
 
