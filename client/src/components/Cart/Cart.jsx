@@ -18,6 +18,8 @@ function Cart(props) {
 
   const dispatch = useDispatch();
 
+  console.log({"pr": props })
+
   // For getting the current user and 
   useEffect(()=>{
     if(props.currentUser.name){
