@@ -11,7 +11,7 @@ const connectDB = require("./config/db");
 const router = require("./router/routes")
 
 // PORT
-const PORT = 5000 || process.env.PORT;
+const PORT = process.env.PORT;
 
 // Connect to the database with the function made--
 connectDB();
