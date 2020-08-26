@@ -74,7 +74,7 @@ function Edit(props) {
 
     dispatch(editInventoryBegin());
     await axios
-    .post(`/edit/`, formData ,{
+    .post(`/edit/${editProduct._id}`, formData ,{
       headers: {
         'Content-Type': 'multipart/form-data'
       },
