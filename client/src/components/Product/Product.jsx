@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import ReactTimeAgo from 'react-time-ago'
 import { mainHttp as axios} from "../../Axios/axios"
 
-const url =  `/uploads/`;
+const url =  `http://localhost:5000/uploads/`;
 
 // const url =  `${axios.baseURL}/uploads/`;
 
