@@ -17,8 +17,8 @@ const {userValidationRules,validate} = require("../helpers/validator")
 
 // Get the basic product functionality
 router.get("/",productController.getProducts);
-router.post("/add",productController.uploads,productController.resize,productController.createProduct)
-router.post("/edit/:id",productController.uploads,productController.resize,productController.editProduct);
+router.post("/add",productController.createProduct)
+router.post("/edit/:id",productController.editProduct);
 router.get("/delete/:id",productController.deleteProduct);
 
 // Get the authentication routes

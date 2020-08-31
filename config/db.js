@@ -2,7 +2,7 @@ const mongo = require("mongo");
 const mongoose = require("mongoose");
 const express = require("express");
 
-const db =  process.env.MONGODB_URI ;
+const db =  process.env.MONGODB_URI  ;
 // process.env.MONGODB_URI;
 
 mongoose.Promise = global.Promise;

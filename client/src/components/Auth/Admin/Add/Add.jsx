@@ -16,9 +16,9 @@ import {useDispatch,connect} from "react-redux";
 
 
 const initialState = {
-  name:'gfg',
+  name:'',
   price:'',
-  image:'',
+  imageLink:'',
   description:''
 }
 
@@ -28,7 +28,6 @@ function Add(props) {
   const dispatch = useDispatch();
 
   const [product,setProduct] = useState('');
-  const [file,setFile] = useState('')
   const [state,setState]  = useState({added : false});
 
 
@@ -48,33 +47,31 @@ function Add(props) {
     }
 
 
-    // handle file change
-    function handleFileChange(evt){
-      setFile(evt.target.files[0])
-    }
 
 
 // handle the product submission
   const handleSubmitProduct = async(event) =>{
     event.preventDefault();
-
+  console.log("submit started")
     const formData = new FormData();
     await formData.append("name", product.name);
     await formData.append("price", product.price);
     await formData.append("description", product.description);
-    await formData.append("file", file);
-    await formData.append("image", file.name);
+    await formData.append("imageLink", product.imageLink);
 
-   
+
 
     
     dispatch(addInventoryBegin()) 
+
     await axios
-    .post(`/add/`, formData,{
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-    })
+    .post(`/add/`, {
+        "name": product.name,
+        "price": product.price,
+        "description": product.description,
+        "imageLink": product.imageLink
+      }
+     )
       .then(res => {
         setState({added : true}) ;
         dispatch(addInventorySuccess()) 
@@ -103,7 +100,7 @@ function Add(props) {
 
      <form
       // action="/add"
-       method="post" enctype="multipart/form-data" onSubmit={handleSubmitProduct} className={styles.form} >
+       method="post"  onSubmit={handleSubmitProduct} className={styles.form} >
 
       <label className={styles.label}>Name</label>
        <input
@@ -127,13 +124,12 @@ function Add(props) {
 
        <label className={styles.label}>Image</label>
        <input
-         type="file" 
+         type="text" 
          className={styles.inputField}
-         name="image"
-         accept="image/*"
+         name="imageLink"
          placeholder='Upload your image here..'
-        //  value={product.image && product.image}
-         onChange={(e) => handleFileChange(e)}
+         value={product.imageLink}
+         onChange={(e) => handleChange(e)}
          /><br/>
 
        <label className={styles.label}>Description</label>

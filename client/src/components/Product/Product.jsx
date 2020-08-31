@@ -19,7 +19,7 @@ export default function Product(props) {
      <div className={styles.product__container}>
        <div className={styles.product__image}>
          <Link   to={{pathname: `/product/${props.item._id}`, query: { id: props.item.id }}}>
-            <img src={(`${url}${props.item.file}`)} alt="watch"/>
+            <img src={props.item.imageLink} alt="watch"/>
          </Link>
        </div>
        <div className={styles.product__content}>

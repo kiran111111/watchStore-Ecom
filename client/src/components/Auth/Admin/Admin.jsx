@@ -61,7 +61,7 @@ function Admin(props) {
        <thead className={styles.table__body}>
          <tr>
            <th>No.</th>
-           <th>Image</th>
+           {/* <th>Image</th> */}
            <th>Name</th>
            <th>Price</th>
            <th>Id</th>
@@ -75,7 +75,7 @@ function Admin(props) {
             <tbody key={i} className={styles.table__body} >
             <tr>
               <td>{i+1}</td>
-              <td>{p.name}</td>
+              {/* <td>{p.name}</td> */}
               <td>{p.name}</td>
               <td>${p.price}</td>
               <td>{p._id}</td>

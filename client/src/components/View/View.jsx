@@ -43,7 +43,7 @@ function View(props) {
          <div className={styles.view__container}>
           <div className={styles.view__content}>
             <div className={styles.view__image}>
-              <img src={(`${url}${product.file}`)} alt="watch"/>
+              <img src={product.imageLink} alt="watch"/>
             </div>
             <div className={styles.view__details}>
               <p>{product.name} </p>

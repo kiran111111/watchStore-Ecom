@@ -13,12 +13,9 @@ const productSchema = new mongoose.Schema({
     type:Number,
     required:true
   },
-  image:{
-    type:Object,
+  imageLink:{
+    type:String,
    required:true
- },
- file:{
-  type:Object
  },
   description:{
    type:String,

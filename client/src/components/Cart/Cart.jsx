@@ -93,7 +93,9 @@ function Cart(props) {
                           {props.items.map((item,i)=>(
                             <div className={styles.items} key={i}>
                               <div className={styles.item}>
-                                <img className={styles.image} src={(`${url}${item.product.file}`)} alt="watch" />
+                                <Link   to={{pathname: `/product/${item.product._id}`, query: { id: item.product.id }}}>
+                                   <img className={styles.image} src={item.product.imageLink} alt="watch" />
+                                </Link>
                               </div>
                               <div className={styles.details}>
                                 <p className={styles.name}>{item.product.name}</p>

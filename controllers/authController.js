@@ -220,7 +220,6 @@ exports.loginUser = (req,res) =>{
                   res.status(401).send('Incorrect Password');
                }
            }catch(err){
-             console.log(err)
              res.status(401).send({
                error: 'Error occured!!!'
             });

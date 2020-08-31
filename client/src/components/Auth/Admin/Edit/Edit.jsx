@@ -39,10 +39,9 @@ function Edit(props) {
 
   console.log(editProduct)
   // const {_id,name,price,image,description} = editProduct;
-  const [file,setFile] = useState('')
-  console.log(file)
- 
-  
+
+
+
 
 // Apply an event handler to the input fields
   function handleChange(evt) {
@@ -53,13 +52,6 @@ function Edit(props) {
   }
 
 
-  // handle file change
-  function handleFileChange(evt){
-      console.log(evt.target.files[0].name)
-      setFile(evt.target.files[0])
-    }
-
-
   // handle the product submission
   const handleSubmitProduct = async(id,event) =>{
     event.preventDefault();
@@ -68,17 +60,19 @@ function Edit(props) {
     formData.append("name", editProduct.name);
     formData.append("price", editProduct.price);
     formData.append("description", editProduct.description);
-    formData.append("file", file);
-    formData.append("image", file.name);
+    formData.append("image", editProduct.imageLink);
 
 
     dispatch(editInventoryBegin());
     await axios
-    .post(`/edit/${editProduct._id}`, formData ,{
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-    })
+    .post(`/edit/${editProduct._id}`, 
+     {
+      "name": editProduct.name,
+      "price": editProduct.price,
+      "description": editProduct.description,
+      "imageLink": editProduct.imageLink
+     }
+    )
       .then(res => {
         setState({edited : true})
         dispatch(editInventorySuccess());
@@ -138,11 +132,11 @@ function Edit(props) {
        <label className={styles.label}>Image</label>
        <input
          className={styles.inputField}
-         type="file" 
-         name="image"
+         type="text" 
+         name="imageLink"
          placeholder='Upload your image here..'
-         value=''
-         onChange={(e) => handleFileChange(e)}
+         value={editProduct.imageLink}
+         onChange={(e) => handleChange(e)}
          /><br/>
 
        <label className={styles.label}>Description</label>
