@@ -165,7 +165,7 @@ exports.registerUser =  async (req,res) =>{
      const hashedPassword = await bcrypt.hash(req.body.password,10);
       let user = new User({
        name:req.body.name,
-       username:req.body.username,
+       username:req.body.username.toLowerCase(),
        password:hashedPassword
       }) 
 
@@ -193,7 +193,7 @@ exports.registerUser =  async (req,res) =>{
 // new ...LOGIN route---------------------------------------------------------------------
 exports.loginUser = (req,res) =>{
      
- const query = { username : req.body.username};
+ const query = { username : req.body.username.toLowerCase()};
  let password = req.body.password;
 
    User.findOne(query, async function(err, user) {

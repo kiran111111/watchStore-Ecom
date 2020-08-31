@@ -53,6 +53,9 @@ function Register(props) {
     if(!name){
       nameError = 'Name cannot be blank'
     }
+    if(name.length < 6){
+      nameError = 'Name should be of more than 5 characters!!!'
+    }
     if(!username){
       userNameError = 'Username cannot be blank'
     }
@@ -84,7 +87,7 @@ function Register(props) {
  
   const handleRegister = event => {
     event.preventDefault()
-    console.log(props)
+    // console.log(props)
     if(props.error){
       setError(props.error)
     }
