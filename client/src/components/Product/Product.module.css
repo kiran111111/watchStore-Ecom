@@ -2,14 +2,14 @@
 .product__wrapper{
    flex:1 0 250px;
    /* min-width:25%;*/
-   max-width:30%; 
+   max-width:25%; 
 } 
 
-@media screen and (max-width:1024px){
+@media screen and (max-width:1025px){
   .product__wrapper{
-    flex:1 0 200px;
+    flex:1 0 300px;
     /* min-width:25%;*/
-    max-width:40%; 
+    max-width:33%; 
  } 
 }
 

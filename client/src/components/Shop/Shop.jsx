@@ -12,8 +12,8 @@ function Shop(props) {
     <NavBar />
      <div className={styles.shop__container}>
        {props.products.map((item,i)=>(
-        <Product item={item}  key={i}/>
-        ))}
+         <Product item={item}  key={i}/>
+       ))}
      </div>
   </div>
  )
